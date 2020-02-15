@@ -1,6 +1,7 @@
 <template>
   <el-form ref="postForm"
-    :model="postForm">
+    :model="postForm"
+    :rules="rules">
     <sticky :class-name="'sub-navbar'">
       <el-button v-if="!isEdit"
         @click="showGuide">显示帮助</el-button>
@@ -97,10 +98,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="fileName"
+              <el-form-item prop="originalName"
                 label="文件名称："
                 :label-width="labelWidth">
-                <el-input v-model="postForm.fileName"
+                <el-input v-model="postForm.originalName"
                   placeholder="文件名称"
                   disabled></el-input>
               </el-form-item>
@@ -124,8 +125,8 @@
               <el-form-item :label-width="labelWidth"
                 label="目录：">
                 <div>
-                  <el-tree v-if="postForm.contents && postForm.contents.length > 0"
-                    class="preview-wrapper"></el-tree>
+                  <el-tree :data="contentsTree"
+                    @node-click="handleClick"></el-tree>
                 </div>
               </el-form-item>
             </el-col>
@@ -141,6 +142,32 @@ import Sticky from '../../../components/Sticky/index'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload/index'
 import MdInput from '../../../components/MDinput/index'
+import { createBook } from '../../../api/book'
+
+const defaultForm = {
+  title: '',
+  author: '',
+  publisher: '',
+  language: '',
+  rootPath: '',
+  filePath: '',
+  unzipPath: '',
+  originalName: '',
+  url: '',
+  fileName: '',
+  path: '',
+  cover: '',
+  coverPath: '',
+  creator: '',
+  rootFile: ''
+}
+
+const fields = {
+  title: '标题',
+  author: '作者',
+  publisher: '出版社',
+  language: '语言'
+}
 
 export default {
   components: { Sticky, Warning, EbookUpload, MdInput },
@@ -148,6 +175,13 @@ export default {
     isEdit: Boolean
   },
   data() {
+    const validateRequire = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error(fields[rule.field] + '必须填写'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: false,
       postForm: {
@@ -164,21 +198,94 @@ export default {
         cover: ''
       },
       fileList: [],
-      labelWidth: '120px'
+      labelWidth: '120px',
+      contentsTree: [],
+      rules: {
+        title: [{ validator: validateRequire }],
+        author: [{ validator: validateRequire }],
+        language: [{ validator: validateRequire }],
+        publisher: [{ validator: validateRequire }]
+      }
     }
   },
   methods: {
+    setData(data) {
+      const {
+        title,
+        author,
+        publisher,
+        language,
+        rootPath,
+        filePath,
+        unzipPath,
+        originalName,
+        url,
+        fileName,
+        path,
+        cover,
+        coverPath,
+        creator,
+        contents,
+        rootFile,
+        contentsTree
+      } = data
+      this.postForm = {
+        ...this.postForm,
+        title,
+        author,
+        publisher,
+        language,
+        rootPath,
+        filePath,
+        unzipPath,
+        originalName,
+        publisher,
+        url,
+        fileName,
+        path,
+        cover,
+        coverPath,
+        creator,
+        contents,
+        rootFile
+      }
+      this.contentsTree = contentsTree
+    },
+    setDefault() {
+      this.postForm = Object.assign({}, this.defaultForm)
+      this.contentsTree = []
+    },
     showGuide() {
       console.log('show guide')
     },
     submitForm() {
-      this.loading = true
+      if (!this.loading) {
+        this.loading = true
+        this.$refs.postForm.validate((valid, fields) => {
+          if (valid) {
+            const book = { ...this.postForm }
+            delete book.contents
+            delete book.contentsTree
+            createBook(book)
+          } else {
+            const message = fields[Object.keys(fields)[0]][0].message
+            this.$message({ message, type: 'error' })
+            this.loading = false
+          }
+        })
+      }
     },
-    onUploadSuccess() {
-      console.log('onsucc')
+    onUploadSuccess(data) {
+      console.log('onsucc', data)
+      this.setData(data)
     },
     onUpLoadRemove() {
-      console.log('onremove')
+      this.setDefault()
+    },
+    handleClick(data) {
+      if (data.text) {
+        window.open(data.text)
+      }
     }
   }
 }
