@@ -259,21 +259,21 @@ export default {
       console.log('show guide')
     },
     submitForm() {
-      if (!this.loading) {
-        this.loading = true
-        this.$refs.postForm.validate((valid, fields) => {
-          if (valid) {
-            const book = { ...this.postForm }
-            delete book.contents
-            delete book.contentsTree
-            createBook(book)
-          } else {
-            const message = fields[Object.keys(fields)[0]][0].message
-            this.$message({ message, type: 'error' })
-            this.loading = false
-          }
-        })
-      }
+      // if (!this.loading) {
+      //   this.loading = true
+      this.$refs.postForm.validate((valid, fields) => {
+        if (valid) {
+          const book = { ...this.postForm }
+          delete book.contents
+          delete book.contentsTree
+          createBook(book)
+        } else {
+          const message = fields[Object.keys(fields)[0]][0].message
+          this.$message({ message, type: 'error' })
+          this.loading = false
+        }
+      })
+      // }
     },
     onUploadSuccess(data) {
       console.log('onsucc', data)
