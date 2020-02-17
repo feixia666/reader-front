@@ -89,10 +89,10 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item prop="facePath"
+              <el-form-item prop="coverPath"
                 label="封面路径："
                 :label-width="labelWidth">
-                <el-input v-model="postForm.facePath"
+                <el-input v-model="postForm.coverPath"
                   placeholder="封面路径"
                   disabled></el-input>
               </el-form-item>
@@ -110,6 +110,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="封面："
+                prop="cover"
                 :label-width="labelWidth">
                 <a v-if="postForm.cover"
                   :href="postForm.cover"
@@ -142,25 +143,7 @@ import Sticky from '../../../components/Sticky/index'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload/index'
 import MdInput from '../../../components/MDinput/index'
-import { createBook } from '../../../api/book'
-
-const defaultForm = {
-  title: '',
-  author: '',
-  publisher: '',
-  language: '',
-  rootPath: '',
-  filePath: '',
-  unzipPath: '',
-  originalName: '',
-  url: '',
-  fileName: '',
-  path: '',
-  cover: '',
-  coverPath: '',
-  creator: '',
-  rootFile: ''
-}
+import { createBook, getBook } from '../../../api/book'
 
 const fields = {
   title: '标题',
@@ -208,7 +191,18 @@ export default {
       }
     }
   },
+  created() {
+    if (this.isEdit) {
+      const fileName = this.$route.params.fileName
+      this.getBookData(fileName)
+    }
+  },
   methods: {
+    getBookData(fileName) {
+      getBook(fileName).then(res => {
+        this.setData(res.data)
+      })
+    },
     setData(data) {
       const {
         title,
@@ -252,28 +246,45 @@ export default {
       this.contentsTree = contentsTree
     },
     setDefault() {
-      this.postForm = Object.assign({}, this.defaultForm)
+      this.$refs.postForm.resetFields()
       this.contentsTree = []
+      this.fileList = []
     },
     showGuide() {
       console.log('show guide')
     },
     submitForm() {
-      // if (!this.loading) {
-      //   this.loading = true
-      this.$refs.postForm.validate((valid, fields) => {
-        if (valid) {
-          const book = { ...this.postForm }
-          delete book.contents
-          delete book.contentsTree
-          createBook(book)
-        } else {
-          const message = fields[Object.keys(fields)[0]][0].message
-          this.$message({ message, type: 'error' })
-          this.loading = false
-        }
-      })
-      // }
+      if (!this.loading) {
+        this.loading = true
+        this.$refs.postForm.validate((valid, fields) => {
+          if (valid) {
+            const book = { ...this.postForm }
+            delete book.contentsTree
+            if (!this.isEdit) {
+              createBook(book)
+                .then(res => {
+                  const { msg } = res
+                  this.$notify({
+                    title: '操作成功',
+                    message: msg,
+                    type: 'success',
+                    duration: 2000
+                  })
+                  this.loading = false
+                  this.setDefault()
+                })
+                .catch(() => {
+                  this.loading = false
+                })
+            } else {
+            }
+          } else {
+            const message = fields[Object.keys(fields)[0]][0].message
+            this.$message({ message, type: 'error' })
+            this.loading = false
+          }
+        })
+      }
     },
     onUploadSuccess(data) {
       console.log('onsucc', data)

@@ -7,3 +7,13 @@ export function createBook(data) {
     data
   })
 }
+
+export function getBook(fileName) {
+  return request({
+    url: '/book/book',
+    method: 'get',
+    params: {
+      fileName
+    }
+  })
+}
