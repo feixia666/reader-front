@@ -125,10 +125,12 @@
             <el-col :span="24">
               <el-form-item :label-width="labelWidth"
                 label="目录：">
-                <div>
+                <div v-if="contentsTree && contentsTree.length > 0"
+                  class="contents-wrapper">
                   <el-tree :data="contentsTree"
                     @node-click="handleClick"></el-tree>
                 </div>
+                <span v-else>无</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -143,7 +145,7 @@ import Sticky from '../../../components/Sticky/index'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload/index'
 import MdInput from '../../../components/MDinput/index'
-import { createBook, getBook } from '../../../api/book'
+import { createBook, getBook, updateBook } from '../../../api/book'
 
 const fields = {
   title: '标题',
@@ -244,6 +246,7 @@ export default {
         rootFile
       }
       this.contentsTree = contentsTree
+      this.fileList = [{ name: originalName || fileName, url }]
     },
     setDefault() {
       this.$refs.postForm.resetFields()
@@ -254,6 +257,16 @@ export default {
       console.log('show guide')
     },
     submitForm() {
+      const onSuccess = res => {
+        const { msg } = res
+        this.$notify({
+          title: '操作成功',
+          message: msg,
+          type: 'success',
+          duration: 2000
+        })
+        this.loading = false
+      }
       if (!this.loading) {
         this.loading = true
         this.$refs.postForm.validate((valid, fields) => {
@@ -263,20 +276,16 @@ export default {
             if (!this.isEdit) {
               createBook(book)
                 .then(res => {
-                  const { msg } = res
-                  this.$notify({
-                    title: '操作成功',
-                    message: msg,
-                    type: 'success',
-                    duration: 2000
-                  })
-                  this.loading = false
+                  onSuccess(res)
                   this.setDefault()
                 })
                 .catch(() => {
                   this.loading = false
                 })
             } else {
+              updateBook(book).then(res => {
+                onSuccess(res)
+              })
             }
           } else {
             const message = fields[Object.keys(fields)[0]][0].message

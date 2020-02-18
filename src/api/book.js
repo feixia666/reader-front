@@ -8,6 +8,14 @@ export function createBook(data) {
   })
 }
 
+export function updateBook(data) {
+  return request({
+    url: '/book/update',
+    method: 'post',
+    data
+  })
+}
+
 export function getBook(fileName) {
   return request({
     url: '/book/book',
@@ -15,5 +23,20 @@ export function getBook(fileName) {
     params: {
       fileName
     }
+  })
+}
+
+export function getCategory() {
+  return request({
+    url: '/book/category',
+    method: 'get'
+  })
+}
+
+export function listBook(params) {
+  return request({
+    url: '/book/list',
+    method: 'get',
+    params
   })
 }
