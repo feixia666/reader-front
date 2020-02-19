@@ -145,6 +145,10 @@
           <el-button type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row.fileName)"></el-button>
+          <el-button type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row.fileName)"
+            style="color: #f56c6c;"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -159,7 +163,7 @@
 <script>
 import pagination from '../../components/Pagination'
 import waves from '../../directive/waves'
-import { getCategory, listBook } from '../../api/book'
+import { getCategory, listBook, deleteBook } from '../../api/book'
 import { parseTime } from '../../utils'
 export default {
   components: {
@@ -253,6 +257,15 @@ export default {
     },
     handleUpdate(fileName) {
       this.$router.push(`/book/edit/${fileName}`)
+    },
+    handleDelete(fileName) {
+      this.$confirm('此操作将永久删除该电子书，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteBook(fileName).then(res => {})
+      })
     },
     changeShowCover(value) {
       this.showCover = value
