@@ -264,7 +264,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteBook(fileName).then(res => {})
+        deleteBook(fileName).then(res => {
+          const { msg } = res
+          this.$notify({
+            title: '操作成功',
+            message: msg,
+            type: 'success',
+            duration: 2000
+          })
+          this.handleFilter()
+        })
       })
     },
     changeShowCover(value) {
