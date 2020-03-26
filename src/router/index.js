@@ -114,6 +114,18 @@ export const asyncRoutes = [
         }
       },
       {
+        name: 'bookView',
+        path: '/book/view/:fileName',
+        component: () => import('@/views/bookDetail/Ebook.vue'),
+        hidden: true,
+        meta: {
+          title: '查看图书',
+          icon: 'list',
+          roles: ['admin'],
+          activeMenu: '/book/list'
+        }
+      },
+      {
         name: 'bookList',
         path: '/book/list',
         component: () => import('@/views/book/list'),

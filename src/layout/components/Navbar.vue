@@ -30,7 +30,7 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect"
         trigger="click">
         <div class="avatar-wrapper">
-          <img src="https://avatars2.githubusercontent.com/u/37666117?s=400&u=5228ede45a2fdb6d8bea463642570b8606a73b9c&v=4"
+          <img :src="avatar"
             class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>

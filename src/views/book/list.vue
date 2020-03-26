@@ -143,6 +143,9 @@
         fixed="right">
         <template slot-scope="scope">
           <el-button type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row.fileName)"></el-button>
+          <el-button type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row.fileName)"></el-button>
           <el-button type="text"
@@ -185,7 +188,7 @@ export default {
       tableKey: 0,
       listLoading: false,
       listQuery: {},
-      list: '',
+      list: [],
       category: [],
       showCover: false,
       total: 0
@@ -203,7 +206,7 @@ export default {
       let listQuery = {
         page: 1,
         pageSize: 20,
-        sort: '+id'
+        sort: '-id'
       }
       this.listQuery = { ...listQuery, ...this.listQuery }
     },
@@ -257,6 +260,12 @@ export default {
     },
     handleUpdate(fileName) {
       this.$router.push(`/book/edit/${fileName}`)
+    },
+    handleView(fileName) {
+      console.log(fileName)
+      let params = {}
+      params.fileName = fileName
+      this.$router.push({ name: 'bookView', params })
     },
     handleDelete(fileName) {
       this.$confirm('此操作将永久删除该电子书，是否继续？', '提示', {
