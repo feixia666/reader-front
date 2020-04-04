@@ -7,7 +7,7 @@
       autocomplete="on"
       label-position="left">
       <div class="title-container">
-        <h3 class="title">小慕读书</h3>
+        <h3 class="title">电子书管理系统</h3>
       </div>
       <el-form-item prop="username">
         <span class="svg-container">

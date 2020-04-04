@@ -43,6 +43,7 @@
             href="https://github.com/feixia666/reader-front">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
+          <el-dropdown-item>{{nickname}}</el-dropdown-item>
           <el-dropdown-item divided
             @click.native="logout">
             <span style="display:block;">登出</span>
@@ -72,7 +73,7 @@ export default {
     Search
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device'])
+    ...mapGetters(['sidebar', 'avatar', 'device', 'nickname'])
   },
   methods: {
     toggleSideBar() {
