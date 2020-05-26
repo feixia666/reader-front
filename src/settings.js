@@ -1,5 +1,5 @@
 module.exports = {
-  title: '小玩意儿',
+  title: '电子书管理系统',
 
   /**
    * @type {boolean} true | false

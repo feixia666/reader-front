@@ -35,14 +35,14 @@
         style="margin-bottom:30px;">
         <todo-list />
       </el-col>
-      <el-col :xs="{span: 24}"
+      <!-- <el-col :xs="{span: 24}"
         :sm="{span: 12}"
         :md="{span: 12}"
         :lg="{span: 12}"
         :xl="{span: 6}"
         style="margin-bottom:30px;">
         <box-card />
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>

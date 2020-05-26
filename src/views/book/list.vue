@@ -157,6 +157,7 @@
     </el-table>
     <pagination v-show="total > 0"
       :total="total"
+      :page-size='10'
       :page.sync="listQuery.page"
       :limit.sync="listQuery.pageSize"
       @pagination="handleFilter" />
@@ -256,13 +257,12 @@ export default {
       this.getList()
     },
     handleCreate() {
-      this.$router.push({})
+      this.$router.push({ name: 'bookCreate' })
     },
     handleUpdate(fileName) {
       this.$router.push(`/book/edit/${fileName}`)
     },
     handleView(fileName) {
-      console.log(fileName)
       let params = {}
       params.fileName = fileName
       this.$router.push({ name: 'bookView', params })

@@ -115,21 +115,27 @@ export const asyncRoutes = [
       },
       {
         name: 'bookView',
-        path: '/book/view/:fileName',
+        path: '/book/view',
         component: () => import('@/views/bookDetail/Ebook.vue'),
-        hidden: true,
+        // hidden: true,
         meta: {
-          title: '查看图书',
-          icon: 'list',
+          title: '图书阅读',
+          icon: 'documentation',
           roles: ['admin', 'editor'],
-          activeMenu: '/book/list'
+          activeMenu: '/book/view'
         }
       },
       {
         name: 'bookList',
         path: '/book/list',
         component: () => import('@/views/book/list'),
-        meta: { title: '图书列表', icon: 'list', roles: ['admin', 'editor'] }
+        meta: { title: '图书列表', icon: 'list', roles: ['admin'] }
+      },
+      {
+        name: 'editList',
+        path: '/book/editList',
+        component: () => import('@/views/book/editList'),
+        meta: { title: '书城', icon: 'guide', roles: ['editor'] }
       }
     ]
   },

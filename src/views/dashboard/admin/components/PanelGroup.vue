@@ -55,7 +55,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            付费图书
+            已读
           </div>
           <count-to :start-val="0"
             :end-val="122"
@@ -76,7 +76,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            免费图书
+            未读
           </div>
           <count-to :start-val="0"
             :end-val="342"
